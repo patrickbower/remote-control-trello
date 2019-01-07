@@ -1,4 +1,5 @@
 navigator.mediaDevices.getUserMedia({
+  audio: false,
   video: { facingMode: { exact: "environment" } }
 })
 .then((stream) => {
@@ -17,16 +18,14 @@ navigator.mediaDevices.getUserMedia({
   function onCapabilitiesReady(capabilities) {
     if (capabilities.torch) {
       
-      let touchBlink = false;
-            
-      setInterval(() => { 
+      console.log("onCapabilitiesReady", capabilities.torch);
+      let touchBlink = true;
+      setInterval(() => {
         track.applyConstraints({
           advanced: [{torch: !touchBlink}]
         }).catch(e => console.log(e));
-        
-        console.log('touchBlink', touchBlink);
-       
-      }, 1000);
+        touchBlink = !touchBlink;        
+      }, 500);
     }
   }
 })
