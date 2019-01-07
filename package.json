@@ -1,9 +1,9 @@
 {
-  "name": "quickstart",
-  "version": "1.0.0",
-  "description": "Minamilist project startup",
+  "name": "remote-control-trello",
+  "version": "0.0.1",
+  "description": "Remote Control Trello",
   "author": "Patrick Bower",
-  "scripts": { 
-    "start" : "./start.sh" 
+  "scripts": {
+    "start": "./start.sh"
   }
 }
