@@ -15,11 +15,13 @@ navigator.mediaDevices.getUserMedia({
   });
 
   function onCapabilitiesReady(capabilities) {
-    if (capabilities.torch) {
-      track.applyConstraints({
-        advanced: [{torch: true}]
-      })
-      .catch(e => console.log(e));
+    if (capabilities.torch) {     
+      let touchBlink = true;
+      setInterval(() => { 
+        track.applyConstraints({
+          advanced: [{torch: !touchBlink}]
+        }).catch(e => console.log(e));
+       }, 1000);
     }
   }
 })
