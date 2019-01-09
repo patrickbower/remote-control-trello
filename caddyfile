@@ -1,0 +1,8 @@
+localhost:2020 {
+  bind {$ADDRESS}
+  root /Users/patrickbower/Sites/remote-control-trello
+  gzip
+  tls self_signed
+}
+
+  
