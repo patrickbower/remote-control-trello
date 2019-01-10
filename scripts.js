@@ -1,4 +1,4 @@
-console.log("scrips running");
+console.log("scrips running", $);
 
 let APIKey = "bb6807f13b020310a0543a81ebf10765";
 let APIToken = "d89724c1f1285f66151e76c547600c779272f3df7cb7124dabe1f421324bd42c";
