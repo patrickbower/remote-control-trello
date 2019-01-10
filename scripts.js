@@ -23,8 +23,9 @@ let APIToken = "d89724c1f1285f66151e76c547600c779272f3df7cb7124dabe1f421324bd42c
 $.ajax({
   url: `https://api.trello.com/1/tokens?webhooks=true&key=${APIKey}&token=${APIToken}`,
   type: 'DELETE',
-  description: "clear webhook",
   callbackURL: "https://friendly-stonebraker-4efdef.netlify.com/",
+  description: "My first webhook",
+  id: "5c37216e03637781231fa9b7",
   idModel: "5c1a5bc5e9a06b362599d79c",
   success: function(result) {
       console.log(result);
