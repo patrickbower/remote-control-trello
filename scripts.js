@@ -23,7 +23,7 @@ let APIToken = "d89724c1f1285f66151e76c547600c779272f3df7cb7124dabe1f421324bd42c
 $.post(`https://api.trello.com/1/tokens/${APIToken}/webhooks/?key=${APIKey}`, {
   description: "My first webhook",
   callbackURL: "https://friendly-stonebraker-4efdef.netlify.com/",
-  idModel: "yrjgmQuR",
+  idModel: "5c1a5bc5e9a06b362599d79c",
 });
 
 // listen for webhook 
