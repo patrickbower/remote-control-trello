@@ -32,8 +32,8 @@ let APIToken = "d89724c1f1285f66151e76c547600c779272f3df7cb7124dabe1f421324bd42c
 // });
 
 $.ajax({
-  url: `https://api.trello.com/1/tokens/${APIToken}/webhooks/?key=${APIKey}`,
-  type: 'POST',
+  url: `https://api.trello.com/1/members/me/tokens?webhooks=true&key=${APIKey}&token=${APIToken}`,
+  type: 'GET',
   description: "setup webhook",
   callbackURL: "https://friendly-stonebraker-4efdef.netlify.com/",
   idModel: "5c1a5bc5e9a06b362599d79c",
@@ -41,6 +41,17 @@ $.ajax({
       console.log(result);
   }
 });
+
+// $.ajax({
+//   url: `https://api.trello.com/1/tokens/${APIToken}/webhooks/?key=${APIKey}`,
+//   type: 'POST',
+//   description: "setup webhook",
+//   callbackURL: "https://friendly-stonebraker-4efdef.netlify.com/",
+//   idModel: "5c1a5bc5e9a06b362599d79c",
+//   success: function(result) {
+//       console.log(result);
+//   }
+// });
 
 // listen for webhook 
 // when webhook fires 
