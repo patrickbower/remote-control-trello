@@ -1,50 +1,36 @@
-navigator.mediaDevices.getUserMedia({
-  audio: false,
-  video: { facingMode: { exact: "environment" } }
-})
-.then((stream) => {
-  const video = document.querySelector('video');
-  video.srcObject = stream;
-  
-  // get the active track of the stream
-  const track = stream.getVideoTracks()[0];
-  let timeOutVar;
-  let blink = true;
+console.log("scrips running");
 
-  video.addEventListener('loadedmetadata', (e) => {  
-    let timer = function(terminator = false) {
-      if(terminator) {
-          clearTimeout(timeOutVar);
-          onCapabilitiesReady(track.getCapabilities(), false);
-      } else {
-          onCapabilitiesReady(track.getCapabilities(), blink);
-          blink = !blink;
-          timeOutVar = setTimeout(function(){timer();}, 500);
-      }
-    }   
-    // timer(false); //  -> start loop
+let APIKey = "bb6807f13b020310a0543a81ebf10765";
+let APIToken = "d89724c1f1285f66151e76c547600c779272f3df7cb7124dabe1f421324bd42c";
 
-    let stopBtn = document.querySelector(".stop-btn");
-    stopBtn.addEventListener("click", () => {
-      timer(true); //  -> end loop
-      console.log('stop you bugger');
-    })
+//// device orientation
+// detect if device has been flipped over
+// if flipped onto face
+// timestamp fpr +20mins from timeNow()
+// ping trello
 
-    let startBtn = document.querySelector(".start-btn");
-    startBtn.addEventListener("click", () => {
-      timer(false); //  -> start loop
-      console.log('get going');
-    })
+//// trello
+// store API/board/list key
+// add 'due date' to first card in list
+// on success callback show stop button to cancel anytime
+// setup webhook to fire back when due
 
-  });
+// var exampleSocket = new WebSocket("ws://www.example.com/socketserver");
+// exampleSocket.onmessage = function (event) {
+//   console.log(event.data);
+// }
 
-  function onCapabilitiesReady(capabilities, blink) {
-    console.log("onCapabilitiesReady", blink);
-    if (capabilities.torch) {
-      track.applyConstraints({
-        advanced: [{torch: blink}]
-      }).catch(e => console.log(e));
-    }
-  }
-})
-.catch(err => console.error('getUserMedia() failed: ', err));
+$.post(`https://api.trello.com/1/tokens/${APIToken}/webhooks/?key=${APIKey}`, {
+  description: "My first webhook",
+  callbackURL: "https://friendly-stonebraker-4efdef.netlify.com/",
+  idModel: "yrjgmQuR",
+});
+
+// listen for webhook 
+// when webhook fires 
+
+//// flashlight
+// start flashing light
+// click stop button
+// stop flashing light
+// ping trello to remove 'due date'
