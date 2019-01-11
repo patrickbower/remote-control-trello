@@ -2,28 +2,29 @@
 
 //Device Orientation
 class Orientation {
-  constructor(){
-    this.trello = {
-      key: "bb6807f13b020310a0543a81ebf10765",
-      token: "d89724c1f1285f66151e76c547600c779272f3df7cb7124dabe1f421324bd42c"
-    }
-    
+  constructor(){    
     this.settings = {
-      orientation: null
+      currentOrientation: null
     }
   }
   
   init() {
-    console.log('init');
-    // detect if device has been flipped over
-    window.addEventListener('deviceorientation', (event) => {
-      if (Math.round(event.beta) > 90) {
-        this.settings.orientation = 'facedown';
-        this.facedown();
-      } else {
-        this.settings.orientation = 'faceup';
-        this.faceup();
-      }
+    this.bind()
+  }
+
+  bind() {
+    // device orientation
+    let {currentOrientation} = this.settings;
+    let newOrientation = null;    
+      window.addEventListener('deviceorientation', (event) => {
+        Math.round(event.beta) > 90 ? 
+          newOrientation = 'facedown' : 
+          newOrientation = 'faceup';
+
+          if (currentOrientation !== newOrientation) {
+            this[newOrientation]()
+            currentOrientation = newOrientation;
+          }
     });
   }
 
@@ -34,23 +35,6 @@ class Orientation {
   faceup() {
     console.log('faceup');
   }
-  
-  
-  
-  // if flipped onto face
-  // timestamp fpr +20mins from timeNow()
-  // ping Trello
-  //// Trello
-  // store API/board/list key
-  // add 'due date' to first card in list
-  // on success callback show stop button to cancel anytime
-  // display simple timer
-  // when timestamp due date elapsed
-  //// flashlight
-  // start flashing light
-  // click stop button
-  // stop flashing light
-  // ping Trello to remove 'due date'
 }
 
 export default Orientation;
