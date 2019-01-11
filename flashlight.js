@@ -1,53 +1,73 @@
-if (/Mobi|Android/i.test(navigator.userAgent)) {
-  
+"use strict"
 
-
-navigator.mediaDevices.getUserMedia({
-  audio: false,
-  video: { facingMode: { exact: "environment" } }
-})
-.then((stream) => {
-  const video = document.querySelector('video');
-  video.srcObject = stream;
-  
-  // get the active track of the stream
-  const track = stream.getVideoTracks()[0];
-
-  video.addEventListener('loadedmetadata', (e) => {
-
-    // settings
-    let timer;
-    let startBtn = document.querySelector(".start-btn");
-    let stopBtn = document.querySelector(".stop-btn");
-
-    // click start
-    startBtn.addEventListener("click", () => {
-      blinkLight(blink = true);
-    })
-    
-    // begins a loop 
-    function blinkLight(blink) {
-      timer = setInterval(() => {
-        onCapabilitiesReady(track.getCapabilities(), blink = !blink);
-      }, 500)
+class Flashlight {
+  constructor() {
+    this.settings = {
+      blink: false,
+      timer: null,
+      track: undefined,
+      startBtn: ".start-btn",
+      stopBtn: ".stop-btn"
     }
-    
-    // loop continues until stop button clicked
-    stopBtn.addEventListener("click", () => {
-      clearInterval(timer);
-      onCapabilitiesReady(track.getCapabilities(), blink = false);
+  }
+
+  init() {
+    this.events();
+    this.stream();
+  }
+
+  events() {
+    document.querySelector(this.settings.startBtn)
+    .addEventListener("click", () => {
+        this.settings.blink = true
+        this.blinkLight();
+      })
+
+    document.querySelector(this.settings.stopBtn)
+      .addEventListener("click", () => {
+        clearInterval(this.settings.timer);
+        this.settings.blink = false;
+        this.onCapabilitiesReady(
+          this.settings.track.getCapabilities() 
+        );
+      })
+  }
+  
+  stream() {
+    navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: { facingMode: { exact: "environment" } }
     })
+    .then((stream) => {
+      const video = document.querySelector('video');
+      video.srcObject = stream;
+      
+      // get the active track of the stream
+      this.settings.track = stream.getVideoTracks()[0];
+    
+      video.addEventListener('loadedmetadata', (e) => {
+        console.log("streaming");
+      });
+    })
+    .catch(err => console.error('streaming failed: ', err));
+  }
 
-  });
+  blinkLight() {
+    this.settings.timer = setInterval(() => {
+      this.onCapabilitiesReady(
+        this.settings.track.getCapabilities(), 
+        this.settings.blink = !this.settings.blink
+      );
+    }, 500)
+  }
 
-  function onCapabilitiesReady(capabilities, blink) {
+  onCapabilitiesReady(capabilities) {
     if (capabilities.torch) {
-      track.applyConstraints({
-        advanced: [{torch: blink}]
+      this.settings.track.applyConstraints({
+        advanced: [{torch: this.settings.blink}]
       }).catch(e => console.log(e));
     }
   }
-})
-.catch(err => console.error('getUserMedia() failed: ', err));
-
 }
+
+export default Flashlight;
