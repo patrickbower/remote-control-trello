@@ -9,17 +9,34 @@ let Flashlight = new flashlight();
 Flashlight.init();
 
 let Trello = new trello();
-// Trello.init();
+Trello.init();  
 
-  // ping Trello
-  //// Trello
-  // store API/board/list key
-  // add 'due date' to first card in list
-  // on success callback show stop button to cancel anytime
-  // display simple timer
-  // when timestamp due date elapsed
-  //// flashlight
-  // start flashing light
-  // click stop button
-  // stop flashing light
-  // ping Trello to remove 'due date'
+//// start up
+//√ open app
+//√ loads up
+//√ shows the first card
+
+//// basic actions
+//√ flip phone to start
+//√ (flash led once)
+//√ add due date to card
+// start timer
+
+//// timer runs out
+// flash led
+// click complete button
+// - completed
+// - non complete
+
+//// completed
+// archive card, get next
+// reset timer
+// reset card ui
+
+//// non complete
+// { restart process }
+ 
+//// turn device over before timer runs out
+// click complete button
+// archive card, get next
+// reset card ui

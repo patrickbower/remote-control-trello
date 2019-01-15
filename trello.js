@@ -1,48 +1,84 @@
 "use strict";
 
 import * as utils from './utils.js';
+import Config from './trello-settings.js';
+import countdown from './countdown.js';
 
-//Device Orientation
+// trello api
 class Trello {
   constructor() {
-    this.api = {
-      settings: {
-        key: "bb6807f13b020310a0543a81ebf10765",
-        token: "d89724c1f1285f66151e76c547600c779272f3df7cb7124dabe1f421324bd42c",
-        listId: "5a4b9b594982ebae92b8c07e"
-      },
-      url: function(prams){
-        return `http://api.trello.com${prams}&key=${this.settings.key}&token=${this.settings.token}`
-      },
-      getCards: {
-        action: "GET",
-        url: function(pram) { 
-          return `/1/lists/${pram}/cards?`;
-        }
-      },
-      addDueDate: {
-        action: "PUT",
-        url: function(id, time){
-          return `/1/cards/${id}?due=${time}`;
-        }
-      }
+    this.settings = {
+      cardName: ".card-name"
     }
-
-    console.log(this.getCards());
-    console.log(this.setDueDate());
   }
 
-  getCards(){
-    let list = this.api.settings.listId;
-    let prams = this.api.getCards.url(list);
-    return this.api.url(prams);
+  init(){
+    this.query();
+    this.bind();
+    this.start();
   }
 
-  setDueDate(){
-    let cardId = "5c2de93a607193426d3824de";
-    let newDueDate = utils.timeFromNow(5).toISOString();
-    let prams = this.api.addDueDate.url(cardId, newDueDate)
-    return this.api.url(prams);
+  start(){
+    this.getCards().then((cards) => {
+      this.setCard(cards);
+    })
+  }
+
+  bind(){
+    // ToDo: Replace with device flip orientation
+    document.querySelector('.fake-flip-btn').addEventListener('click', ()=> {
+      this.addDueDate().then((response) => {
+        if (response instanceof Object) {
+          this.startCountDown()
+        } else {
+          throw new Error('Network response failed');
+          // ToDo: turn the led on (no flash) to indicate issue
+        }
+      });
+    })
+  }
+
+  startCountDown() {
+    let Countdown = new countdown();
+    Countdown.init();
+    Countdown.start(this.dueTime);
+  }
+
+  query() {
+    this.cardUi = document.querySelector(this.settings.cardName);
+  }
+
+  async getCards(){ 
+    return await this.ajaxRequest(this.getCardsUrl(), Config.getCards.method);
+  }
+
+  setCard(cards){
+    this.cardUi.innerText = cards[0].name;
+    this.cardUi.dataset.id = cards[0].id;
+  }
+
+  async ajaxRequest(url, method){
+    const response = await fetch(url, {method});
+    const json = await response.json();
+    return json;
+  }
+
+  async addDueDate(){
+    let url = this.dueDateUrl(this.cardUi.dataset.id);
+    return await this.ajaxRequest(url, Config.addDueDate.method);
+  }
+
+  getCardsUrl(){
+    let list = Config.settings.listId;
+    let prams = Config.getCards.url(list);
+    return Config.url(prams);
+  }
+
+  dueDateUrl(cardId){
+    // ToDo: update time 5 to be correct
+    this.dueTime = utils.timeFromNow(1);
+    let prams = Config.addDueDate.url(cardId, this.dueTime.toISOString())
+    return Config.url(prams);
   }
 }
 

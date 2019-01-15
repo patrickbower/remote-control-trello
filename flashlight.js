@@ -1,4 +1,6 @@
-"use strict"
+"use strict";
+
+import * as utils from './utils.js';
 
 class Flashlight {
   constructor() {
@@ -12,6 +14,7 @@ class Flashlight {
   }
 
   init() {
+    if (utils.isMobileDevice) { return false };
     this.events();
     this.stream();
   }
