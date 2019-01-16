@@ -8,7 +8,9 @@ import countdown from './countdown.js';
 class Trello {
   constructor() {
     this.settings = {
-      cardName: ".card-name"
+      card: null,
+      cardName: ".card-name",
+      completeBtn: ".complete-btn"
     }
   }
 
@@ -25,17 +27,41 @@ class Trello {
   }
 
   bind(){
-    // ToDo: Replace with device flip orientation
-    document.querySelector('.fake-flip-btn').addEventListener('click', ()=> {
-      this.addDueDate().then((response) => {
-        if (response instanceof Object) {
-          this.startCountDown()
-        } else {
-          throw new Error('Network response failed');
-          // ToDo: turn the led on (no flash) to indicate issue
-        }
-      });
+    window.addEventListener('orientation', (event) => {
+      if (event.detail.text() === 'facedown'){
+        this.startPomodoro();
+      }
+    });
+    
+    document.querySelector('.complete-btn').addEventListener('click', ()=> {
+      this.closeTask();
     })
+  }
+
+  closeTask() {
+    this.archiveCard().then((response) => {
+      if (response instanceof Object) {
+        this.start();
+      } else {
+        // ToDo: Add simple error messaging component
+        console.error('Bugger, Network response failed');
+      }
+    }).catch((error) => {
+      console.error('Bugger, fetch has failed', error);
+    });
+  }
+
+  startPomodoro(){
+    this.addDueDate().then((response) => {
+      if (response instanceof Object) {
+        this.startCountDown();
+      } else {
+        console.error('Bugger, Network response failed');
+        // ToDo: turn the led on (no flash) to indicate issue
+      }
+    }).catch((error) => {
+      console.error('Bugger, fetch has failed', error);
+    });
   }
 
   startCountDown() {
@@ -48,23 +74,30 @@ class Trello {
     this.cardUi = document.querySelector(this.settings.cardName);
   }
 
-  async getCards(){ 
-    return await this.ajaxRequest(this.getCardsUrl(), Config.getCards.method);
-  }
-
   setCard(cards){
-    this.cardUi.innerText = cards[0].name;
-    this.cardUi.dataset.id = cards[0].id;
+    this.card = cards[0];
+    this.cardUi.innerText = this.card.name;
   }
-
+  
   async ajaxRequest(url, method){
     const response = await fetch(url, {method});
     const json = await response.json();
     return json;
   }
+  
+  async getCards(){
+    let url = this.getCardsUrl();
+    return await this.ajaxRequest(url, Config.getCards.method);
+  }
 
   async addDueDate(){
-    let url = this.dueDateUrl(this.cardUi.dataset.id);
+    console.log(this.card.id);
+    let url = this.dueDateUrl(this.card.id);
+    return await this.ajaxRequest(url, Config.addDueDate.method);
+  }
+
+  async archiveCard() {
+    const url = this.getArchiveUrl();
     return await this.ajaxRequest(url, Config.addDueDate.method);
   }
 
@@ -78,6 +111,12 @@ class Trello {
     // ToDo: update time 5 to be correct
     this.dueTime = utils.timeFromNow(1);
     let prams = Config.addDueDate.url(cardId, this.dueTime.toISOString())
+    return Config.url(prams);
+  }
+
+  getArchiveUrl(){
+    let cardId = this.card.id;
+    let prams = Config.archiveCard.url(cardId);
     return Config.url(prams);
   }
 }

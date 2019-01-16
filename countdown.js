@@ -1,15 +1,24 @@
 "use strict";
 
+import flashlight from './flashlight.js';
+
 class Countdown {
   constructor(){    
     this.settings = {
       time: 25,
-      timer: ".timer"
+      timer: ".timer",
+      timerRunning: false
     }
+    this.Flashlight = new flashlight();
   }
   
   init() {
     this.query();
+    this.initFlashlight()
+  }
+
+  initFlashlight(){
+    this.Flashlight.init();
   }
 
   query(){
@@ -17,6 +26,7 @@ class Countdown {
   }
 
   start(dueTime){
+    if (this.timerRunning) return;
     const milliseconds = Math.abs(new Date() - dueTime);
     this.alarm(milliseconds);
     this.timer(milliseconds);
@@ -25,8 +35,18 @@ class Countdown {
   alarm(milliseconds){
     setTimeout(() => {
       clearTimeout(this.timer);
+      this.startFlashlight();
+      this.timerRunning = false;
       console.log("DONE");
     }, milliseconds + 1000);
+  }
+
+  startFlashlight(){
+    window.dispatchEvent(new CustomEvent('flashlight', { 
+        bubbles: true, 
+        detail: { text: () => 'start' }
+      })
+    );
   }
 
   convertMillisecondsToTime(milliseconds){

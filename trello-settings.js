@@ -18,6 +18,12 @@ const Config = {
     url: function(id, time){
       return `/1/cards/${id}?due=${time}`;
     }
+  },
+  archiveCard: {
+    method: "PUT",
+    url: function(id) { 
+      return `/1/cards/${id}?closed=true`;
+    }
   }
 }
 

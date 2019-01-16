@@ -11,8 +11,13 @@ class Orientation {
   }
   
   init() {
-    if (utils.isMobileDevice) { return false };
-    this.bind()
+    // if (utils.isMobileDevice) { return false };
+    this.bind();
+    this.events();
+  }
+
+  events(){
+    this.event = new Event('deviceFlip');
   }
 
   bind() {
@@ -32,13 +37,19 @@ class Orientation {
   }
 
   facedown() {
-    console.log('facedown');
-    // add due date
-    // start timer
+    window.dispatchEvent(new CustomEvent('orientation', { 
+        bubbles: true, 
+        detail: { text: () => 'facedown' } 
+      })
+    );
   }
 
   faceup() {
-    console.log('faceup');
+    window.dispatchEvent(new CustomEvent('orientation', { 
+        bubbles: true, 
+        detail: { text: () => 'faceup' } 
+      })
+    );
   }
 }
 

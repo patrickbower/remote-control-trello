@@ -1,30 +1,29 @@
 "use strict";
 
-import * as utils from './utils.js';
-
 class Flashlight {
   constructor() {
     this.settings = {
       blink: false,
       timer: null,
       track: undefined,
-      startBtn: ".start-btn",
       stopBtn: ".stop-btn"
     }
   }
 
   init() {
-    if (utils.isMobileDevice) { return false };
+    // if (utils.isMobileDevice) { return false };
     this.events();
     this.stream();
   }
 
   events() {
-    document.querySelector(this.settings.startBtn)
-    .addEventListener("click", () => {
+
+    window.addEventListener('flashlight', (event) => {
+      if (event.detail.text() === 'start'){
         this.settings.blink = true
         this.blinkLight();
-      })
+      }
+    });
 
     document.querySelector(this.settings.stopBtn)
       .addEventListener("click", () => {
