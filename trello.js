@@ -1,16 +1,20 @@
 "use strict";
 
-import * as utils from './utils.js';
+import {
+  errorOut,
+  timeFromNow
+} from './utils.js';
 import Config from './trello-settings.js';
 import countdown from './countdown.js';
+import flashlight from './flashlight.js';
 
-// trello api
 class Trello {
   constructor() {
     this.settings = {
       card: null,
       cardName: ".card-name",
-      completeBtn: ".complete-btn"
+      completeBtn: ".complete-btn",
+      timePerTask: 20
     }
   }
 
@@ -21,9 +25,15 @@ class Trello {
   }
 
   start(){
-    this.getCards().then((cards) => {
-      this.setCard(cards);
-    })
+    this.getCards().then((response) => {
+      if (response instanceof Object) {
+        this.setCard(response);
+      } else {
+        errorOut('Network response failed getting cards');
+      }
+    }).catch((error) => {
+      errorOut('Fetch has failed getting cards', error);
+    });
   }
 
   bind(){
@@ -43,11 +53,10 @@ class Trello {
       if (response instanceof Object) {
         this.start();
       } else {
-        // ToDo: Add simple error messaging component
-        console.error('Bugger, Network response failed');
+        errorOut('Network response failed archiving card');
       }
     }).catch((error) => {
-      console.error('Bugger, fetch has failed', error);
+      errorOut('Fetch has failed archiving card', error);
     });
   }
 
@@ -56,11 +65,12 @@ class Trello {
       if (response instanceof Object) {
         this.startCountDown();
       } else {
-        console.error('Bugger, Network response failed');
-        // ToDo: turn the led on (no flash) to indicate issue
+        errorOut('Network response failed adding due date');
+        flashlight.lightOn();
       }
     }).catch((error) => {
-      console.error('Bugger, fetch has failed', error);
+      errorOut('Fetch has failed adding due date', error);
+      flashlight.lightOn();
     });
   }
 
@@ -108,8 +118,7 @@ class Trello {
   }
 
   dueDateUrl(cardId){
-    // ToDo: update time 5 to be correct
-    this.dueTime = utils.timeFromNow(1);
+    this.dueTime = timeFromNow(this.settings.timePerTask);
     let prams = Config.addDueDate.url(cardId, this.dueTime.toISOString())
     return Config.url(prams);
   }

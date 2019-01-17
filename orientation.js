@@ -1,8 +1,5 @@
 "use strict";
 
-import * as utils from './utils.js';
-
-//Device Orientation
 class Orientation {
   constructor(){    
     this.settings = {
@@ -11,7 +8,6 @@ class Orientation {
   }
   
   init() {
-    // if (utils.isMobileDevice) { return false };
     this.bind();
     this.events();
   }

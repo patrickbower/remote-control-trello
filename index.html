@@ -4,26 +4,36 @@
     <meta charset="UTF-8" />
     <title>Remote Controlled Trello</title>
     <link rel="shortcut icon" type="image/x-icon" href="assets/favicon.ico" />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
-      integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="styles.css" />
+
+    <!-- <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://unpkg.com/wingcss"/>
+    <link rel="stylesheet" href="styles.css"/>
+
   </head>
   <body>
-    <h1>Remote Controlled Trello</h1>
-    <hr />
+    <h1><i class="fab fa-trello"></i> ConTrello</h1>
+
+    <div class="card">
+      <h2 class="card-name">loading...</h2>
+      <p class="timer">10:23</p>
+    </div>
+      
+    <div class="buttons">
+      <button class="complete-btn">
+        <i class="fa fa-check-circle fa-lg"></i>
+      </button>
+      <button class="stop-btn">
+        <i class="fa fa-bell-slash fa-lg"></i>
+      </button>
+    </div>
+    <h4 class="error-message">
+      <i class="fa fa-exclamation-circle fa-lg"></i>
+      <br> 
+      This is an example error
+    </h4>
     <video style="display:none;" autoplay></video>
-    <h2 class="card-name"></h2>
-    <h3 class="timer"></h3>
-    <hr />
-    <!-- <button class="stop-btn">Stop</button>
-    <button class="start-btn">Start</button> -->
-    <button class="complete-btn">Complete</button>
-    <button class="fake-flip-btn">Flipped</button>
-    <button class="stop-btn">Stop</button>
   </body>
   <script type="module" src="utils.js"></script>
   <script type="module" src="orientation.js"></script>

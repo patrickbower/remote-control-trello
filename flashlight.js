@@ -1,5 +1,7 @@
 "use strict";
 
+import { errorOut } from './utils.js';
+
 class Flashlight {
   constructor() {
     this.settings = {
@@ -11,13 +13,11 @@ class Flashlight {
   }
 
   init() {
-    // if (utils.isMobileDevice) { return false };
     this.events();
     this.stream();
   }
 
   events() {
-
     window.addEventListener('flashlight', (event) => {
       if (event.detail.text() === 'start'){
         this.settings.blink = true
@@ -51,7 +51,8 @@ class Flashlight {
         console.log("streaming");
       });
     })
-    .catch(err => console.error('streaming failed: ', err));
+    .catch(error => errorOut('streaming failed', error));
+    
   }
 
   blinkLight() {
@@ -62,12 +63,19 @@ class Flashlight {
       );
     }, 500)
   }
+  
+  lightOn() {
+      this.onCapabilitiesReady(
+        this.settings.track.getCapabilities(),
+        this.settings.blink = true
+      );
+  }
 
   onCapabilitiesReady(capabilities) {
     if (capabilities.torch) {
       this.settings.track.applyConstraints({
         advanced: [{torch: this.settings.blink}]
-      }).catch(e => console.log(e));
+      }).catch(error => errorOut('streaming failed', error));
     }
   }
 }
