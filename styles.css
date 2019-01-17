@@ -3,18 +3,33 @@ body, html {
   color: #363636;
   font-size: 30px;
   text-align: center;
+  padding: 0.5em;
+}
+
+.error-message {
+  display: none;
+}
+
+h1 {
+  text-align: left;
+  font-size: 3.5em;
+  font-weight: 600;
 }
 
 .card {
   background: #363636;
   color: #fafafa;
   padding: 1em 1em 1.5em;
+  
+}
+
+.card h2 {
+  font-weight: 700;
 }
 
 .buttons {
   display: flex;
   flex-flow: row wrap;
-  
 }
 
 button {
@@ -26,8 +41,4 @@ button {
 
 button:last-child {
   border-left: 0.2rem solid #fafafa;
-}
-
-.error-message {
-  display: none;
 }
