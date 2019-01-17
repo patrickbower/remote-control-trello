@@ -12,5 +12,8 @@ export function isMobileDevice() {
 
 export function errorOut(message, error) {
   console.warn(message, error);
-  document.querySelector(".error-message").innerText = '🤬 ' + message;
+  const errorEle = document.querySelector(".error-message");
+  const errorTxt = errorEle.getElementsByTagName('span');
+  errorTxt[0].innerText = message;
+  errorEle.style.display = "block";
 }
